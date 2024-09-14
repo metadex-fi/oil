@@ -16,6 +16,7 @@ export class Tx<P extends Provider, W extends Wallet> {
   ) {}
 
   private sequence(rite: (tx: TxBuilder) => TxBuilder): Tx<P, W> {
+    assert(!this.isCompleat, `Tx.sequence: already compleat`);
     this.ointments.push(rite);
     return this;
   }
