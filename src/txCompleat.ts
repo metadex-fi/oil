@@ -1,6 +1,6 @@
 import { Blaze, Provider, Wallet, Core } from "@blaze-cardano/sdk";
-import { Tx } from "./Tx";
-import { TxSigned } from "./TxSigned";
+import { Tx } from "./tx";
+import { TxSigned } from "./txSigned";
 import { CoreUtxo } from "./types";
 import { UtxoSet } from "./utxoSet";
 

@@ -1,9 +1,9 @@
 import { TxBuilder, Blaze, Provider, Wallet, Core } from "@blaze-cardano/sdk";
 import { newTransaction } from "./altered";
-import { TxCompleat } from "./TxCompleat";
 import { CoreUtxo } from "./types";
 import assert from "assert";
 import { UtxoSet } from "./utxoSet";
+import { TxCompleat } from "./txCompleat";
 
 export class Tx<P extends Provider, W extends Wallet> {
   private readonly ointments: ((tx: TxBuilder) => TxBuilder)[] = [];
