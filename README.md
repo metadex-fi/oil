@@ -1,3 +1,6 @@
+![Preview Image](oil.webp)
+<meta property="og:image" content="https://github.com/metadex-fi/oil/oil.webp">
+
 # oil
 “The oil carries our message, our purpose, our vision. It infects, it alters, it completes.”<br>
 — Elesh Norn, Grand Cenobite
