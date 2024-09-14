@@ -6,7 +6,7 @@ import assert from "assert";
 import { UtxoSet } from "./utxoSet";
 
 export class Tx<P extends Provider, W extends Wallet> {
-  private readonly rites: ((tx: TxBuilder) => TxBuilder)[] = [];
+  private readonly ointments: ((tx: TxBuilder) => TxBuilder)[] = [];
   private isCompleat = false;
 
   constructor(
@@ -16,7 +16,7 @@ export class Tx<P extends Provider, W extends Wallet> {
   ) {}
 
   private sequence(rite: (tx: TxBuilder) => TxBuilder): Tx<P, W> {
-    this.rites.push(rite);
+    this.ointments.push(rite);
     return this;
   }
 
@@ -95,8 +95,8 @@ export class Tx<P extends Provider, W extends Wallet> {
         ? await this.blaze.wallet.getChangeAddress()
         : this.changeAddress;
     let txBuilder = newTransaction(this.blaze, changeAddress, this.available.list);
-    for (const task of this.rites) {
-      txBuilder = task(txBuilder);
+    for (const annoint of this.ointments) {
+      txBuilder = annoint(txBuilder);
     }
     return new TxCompleat(
       this.blaze,
@@ -109,7 +109,7 @@ export class Tx<P extends Provider, W extends Wallet> {
   public clone(): Tx<P, W> {
     assert(!this.isCompleat, `Tx.clone: already compleat`);
     const tx = new Tx(this.blaze, this.changeAddress, this.available.clone());
-    tx.rites.push(...this.rites);
+    tx.ointments.push(...this.ointments);
     return tx;
   }
 }
