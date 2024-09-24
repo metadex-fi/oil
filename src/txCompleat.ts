@@ -48,7 +48,7 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
 
       let next = produced.next();
       /**
-       *
+       * checks if the utxo is being created at the change address
        * @param utxo
        * @returns {boolean}
        */
@@ -71,10 +71,18 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
     return this.inputsCache;
   }
 
-  // aaa
   /**
-   *
-   * @param addUtxos
+   * creates a new tx of the same wallet with the previous tx's utxo set, with the
+   * spent utxos removed and the change-utxos at the wallet's change-address added.
+   * The other outputs of that previous tx are considered unavailable, unless added
+   * explicitly again via the addUtxos parameter.
+   * @param addUtxos optional function to add non-change-outputs from the previous tx
+   * to the set of available utxos. The redeemer-field determines whether it has to be 
+   * spent in the chained tx, or is simply made available. There does not appear to be 
+   * a way to make script outputs (consumed with a redeemer) optionally available, but
+   * then I'm not even sure if I'm merely guessing wrong about the difference between 
+   * addInput (assuming that means mandatory inclusion) and addUnspentOutputs (assuming
+   * that means optional inclusion).
    * @returns {Tx}
    */
   public chain = (
