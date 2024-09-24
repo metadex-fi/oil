@@ -4,6 +4,9 @@ import { TxSigned } from "./txSigned";
 import { CoreUtxo } from "./types";
 import { UtxoSet } from "./utxoSet";
 
+/**
+ *
+ */
 export class TxCompleat<P extends Provider, W extends Wallet> {
   private inputsCache:
     | {
@@ -11,6 +14,13 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
         posterior: UtxoSet;
       }
     | undefined;
+  /**
+   *
+   * @param blaze
+   * @param changeAddress
+   * @param residual
+   * @param tx
+   */
   constructor(
     private readonly blaze: Blaze<P, W>,
     private readonly changeAddress: Core.Address,
@@ -18,6 +28,10 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
     public readonly tx: Core.Transaction
   ) {}
 
+  /**
+   *
+   * @returns {{residual: UtxoSet; posterior: UtxoSet}}
+   */
   private get inputs(): {
     residual: UtxoSet;
     posterior: UtxoSet;
@@ -33,7 +47,12 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
       let idx = 0n;
 
       let next = produced.next();
-      const change = (utxo: CoreUtxo) =>
+      /**
+       *
+       * @param utxo
+       * @returns {boolean}
+       */
+      const change = (utxo: CoreUtxo): boolean =>
         utxo.output().address() === this.changeAddress;
       while (!next.done) {
         const input = new Core.TransactionInput(txId, idx++);
@@ -52,6 +71,12 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
     return this.inputsCache;
   }
 
+  // aaa
+  /**
+   *
+   * @param addUtxos
+   * @returns {Tx}
+   */
   public chain = (
     addUtxos?: (utxos: UtxoSet) => {
       utxo: CoreUtxo;
@@ -79,6 +104,10 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
     return tx;
   };
 
+  /**
+   *
+   * @returns {Promise<TxSigned<P, W>>}
+   */
   public sign = async (): Promise<TxSigned<P, W>> => {
     const txSigned = await this.blaze.signTransaction(this.tx);
     return new TxSigned(this.blaze, txSigned);

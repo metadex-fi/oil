@@ -2,17 +2,46 @@ import { Core } from "@blaze-cardano/sdk";
 import { CoreUtxo } from "./types";
 import assert from "assert";
 
+/**
+ *
+ */
 export class UtxoSet {
+  /**
+   *
+   * @param set
+   * @param list
+   * @returns {UtxoSet}
+   */
   private constructor(
     public readonly set: Map<Core.TransactionId, Map<bigint, CoreUtxo>>,
     public readonly list: CoreUtxo[],
   ) {}
 
-  public static empty = (): UtxoSet => {
+  /**
+   *
+   * @returns {UtxoSet}
+   */
+  static empty = (): UtxoSet => {
     return new UtxoSet(new Map(), []);
   }
 
-  public insertNew = (utxo: CoreUtxo) => {
+  /**
+   *
+   * @param list
+   * @returns {UtxoSet}
+   */
+  static fromList = (list: CoreUtxo[]): UtxoSet => {
+    const utxoSet = UtxoSet.empty();
+    list.forEach((utxo) => utxoSet.insertNew(utxo));
+    return utxoSet;
+  }
+
+  /**
+   *
+   * @param utxo
+   * @returns {void}
+   */
+  public insertNew = (utxo: CoreUtxo): void => {
     const txId = utxo.input().transactionId();
     const idx = utxo.input().index();
     const outputs = this.set.get(txId);
@@ -25,6 +54,11 @@ export class UtxoSet {
     this.list.push(utxo);
   };
 
+  /**
+   *
+   * @param inputs
+   * @returns {UtxoSet}
+   */
   public except = (inputs: readonly Core.TransactionInput[]): UtxoSet => {
     const set: Map<Core.TransactionId, Map<bigint, CoreUtxo>> = new Map();
     const list: CoreUtxo[] = [];
@@ -47,6 +81,10 @@ export class UtxoSet {
     return new UtxoSet(set, list);
   }
 
+  /**
+   *
+   * @returns {UtxoSet}
+   */
   public clone = (): UtxoSet => {
     const set: Map<Core.TransactionId, Map<bigint, CoreUtxo>> = new Map();
     for (const [txId, outputs] of this.set) {

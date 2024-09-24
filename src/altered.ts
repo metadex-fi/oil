@@ -1,5 +1,12 @@
 import { Blaze, Provider, Wallet, Core, TxBuilder } from "@blaze-cardano/sdk";
 
+/**
+ *
+ * @param blaze
+ * @param changeAddress
+ * @param myUtxos
+ * @returns {TxBuilder}
+ */
 export function newTransaction<P extends Provider, W extends Wallet>(
   blaze: Blaze<P, W>,
   changeAddress: Core.Address,
