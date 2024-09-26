@@ -1,6 +1,6 @@
 import { TxBuilder, Blaze, Provider, Wallet, Core } from "@blaze-cardano/sdk";
 import { newTransaction } from "./altered";
-import { CoreUtxo } from "./types";
+import { CoreUtxo, TraceUtxo } from "./types";
 import assert from "assert";
 import { UtxoSet } from "./utxoSet";
 import { TxCompleat } from "./txCompleat";
@@ -44,12 +44,12 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @returns {Tx}
    */
   public addInput = (
-    utxo: CoreUtxo,
+    utxo: TraceUtxo,
     redeemer?: Core.PlutusData,
     unhashDatum?: Core.PlutusData
   ): Tx<P, W> => {
     return this.sequence((tx) =>
-      tx.addInput(utxo, redeemer, unhashDatum)
+      tx.addInput(utxo.core, redeemer, unhashDatum)
     );
   }
 
@@ -58,8 +58,8 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @param utxo
    * @returns {Tx}
    */
-  public addReferenceInput = (utxo: CoreUtxo): Tx<P, W> => {
-    return this.sequence((tx) => tx.addReferenceInput(utxo));
+  public addReferenceInput = (utxo: TraceUtxo): Tx<P, W> => {
+    return this.sequence((tx) => tx.addReferenceInput(utxo.core));
   }
 
   /**
@@ -67,12 +67,12 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @param utxos
    * @returns {Tx}
    */
-  public addUnspentOutputs = (utxos: CoreUtxo[]): Tx<P, W> => {
+  public addUnspentOutputs = (utxos: TraceUtxo[]): Tx<P, W> => {
     return this.sequence((tx) => {
-      for (const utxo of utxos) {
-        this.available.insertNew(utxo);
+      for (const {core, trace: inscription} of utxos) {
+        this.available.insertNew(core, inscription);
       }
-      return tx.addUnspentOutputs(utxos);
+      return tx.addUnspentOutputs(utxos.map((utxo) => utxo.core));
     });
   }
 
@@ -173,7 +173,7 @@ export class Tx<P extends Provider, W extends Wallet> {
       this.changeAddress === `ownerWallet`
         ? await this.blaze.wallet.getChangeAddress()
         : this.changeAddress;
-    let txBuilder = newTransaction(this.blaze, changeAddress, this.available.list);
+    let txBuilder = newTransaction(this.blaze, changeAddress, this.available.list.map((utxo) => utxo.core));
     for (const annoint of this.ointments) {
       txBuilder = annoint(txBuilder);
     }

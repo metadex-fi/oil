@@ -1,8 +1,9 @@
 import { Blaze, Provider, Wallet, Core } from "@blaze-cardano/sdk";
 import { Tx } from "./tx";
 import { TxSigned } from "./txSigned";
-import { CoreUtxo } from "./types";
+import { CoreUtxo, TraceUtxo } from "./types";
 import { UtxoSet } from "./utxoSet";
+import { Trace } from "./trace";
 
 /**
  *
@@ -40,7 +41,7 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
       const consumed = this.tx.body().inputs().values();
       const produced = this.tx.body().outputs().values();
 
-      const residual = this.residual.except(consumed);
+      const { posterior: residual } = this.residual.except(consumed);
       const posterior = UtxoSet.empty();
 
       const txId = this.tx.toCore().id;
@@ -59,9 +60,9 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
         const output = next.value;
         const utxo = new Core.TransactionUnspentOutput(input, output);
         if (change(utxo)) {
-          residual.insertNew(utxo);
+          residual.insertNew(utxo, Trace.source(`CHAIN`, `TxCompleat.change`));
         } else {
-          posterior.insertNew(utxo);
+          posterior.insertNew(utxo, Trace.source(`CHAIN`, `TxCompleat.posterior`));
         }
         next = produced.next();
       }
@@ -87,7 +88,7 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
    */
   public chain = (
     addUtxos?: (utxos: UtxoSet) => {
-      utxo: CoreUtxo;
+      utxo: TraceUtxo;
       redeemer: Core.PlutusData | `coerce` | `supply`;
     }[]
   ): Tx<P, W> => {
