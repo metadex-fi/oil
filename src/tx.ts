@@ -69,8 +69,8 @@ export class Tx<P extends Provider, W extends Wallet> {
    */
   public addUnspentOutputs = (utxos: TraceUtxo[]): Tx<P, W> => {
     return this.sequence((tx) => {
-      for (const {core, trace: inscription} of utxos) {
-        this.available.insertNew(core, inscription);
+      for (const {core, trace } of utxos) {
+        this.available.insertNew(core, trace.via(`addUnspentOutputs`));
       }
       return tx.addUnspentOutputs(utxos.map((utxo) => utxo.core));
     });

@@ -93,7 +93,7 @@ export class UtxoSet {
    */
   public insertNew = (utxo: CoreUtxo, trace: Trace): void => {
     const newInsert = this.insert(utxo, trace);
-    assert(newInsert, `UtxoSet.insertNew (${trace}): ${utxo.input().transactionId()}:${utxo.input().index()} already exists in\n${this.list.map((utxo) => utxo.core.input().transactionId() + ':' + utxo.core.input().index()).join('\n')}`);
+    assert(newInsert, `UtxoSet.insertNew (${trace.compose()}):\n${utxo.input().transactionId()}:${utxo.input().index()}\nalready exists in\n${this.list.map((utxo) => utxo.core.input().transactionId() + ':' + utxo.core.input().index()).join('\n')}`);
   };
 
   /**
