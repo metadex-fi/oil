@@ -182,10 +182,16 @@ export class UtxoSet {
    */
   public clone = (): UtxoSet => {
     const set: Map<Core.TransactionId, Map<bigint, TraceUtxo>> = new Map();
+    const list: TraceUtxo[] = [];
     for (const [txId, outputs] of this.set) {
       const outputs_ = new Map(outputs);
+      for (const [index, utxo] of outputs) {
+        const utxo_: TraceUtxo = {core: Core.TransactionUnspentOutput.fromCbor(utxo.core.toCbor()), trace: utxo.trace.clone()};
+        list.push(utxo_);
+        outputs_.set(index, utxo_);
+      }
       set.set(txId, outputs_);
     }
-    return new UtxoSet(set, this.list.slice());
+    return new UtxoSet(set, list);
   }
 }

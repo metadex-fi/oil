@@ -57,4 +57,8 @@ export class Trace {
     const trace = `${text}${this.compose()}`;
     return new Trace(trace, `\n  ${rra}VIA: `);
   };
+
+  public clone = (): Trace => {
+    return new Trace(this.trace.slice(), this.prefix.slice());
+  }
 }
