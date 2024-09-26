@@ -12,7 +12,7 @@ export class TxSigned<P extends Provider, W extends Wallet> {
    */
   constructor(
     private readonly blaze: Blaze<P, W>,
-    public readonly tx: Core.Transaction
+    public readonly tx: Core.Transaction,
   ) {}
 
   /**

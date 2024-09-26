@@ -34,7 +34,7 @@ export class Tx<P extends Provider, W extends Wallet> {
     assert(!this.isCompleat, `Tx.sequence: already compleat`);
     this.ointments.push(rite);
     return this;
-  }
+  };
 
   /**
    *
@@ -46,12 +46,10 @@ export class Tx<P extends Provider, W extends Wallet> {
   public addInput = (
     utxo: TraceUtxo,
     redeemer?: Core.PlutusData,
-    unhashDatum?: Core.PlutusData
+    unhashDatum?: Core.PlutusData,
   ): Tx<P, W> => {
-    return this.sequence((tx) =>
-      tx.addInput(utxo.core, redeemer, unhashDatum)
-    );
-  }
+    return this.sequence((tx) => tx.addInput(utxo.core, redeemer, unhashDatum));
+  };
 
   /**
    *
@@ -60,7 +58,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    */
   public addReferenceInput = (utxo: TraceUtxo): Tx<P, W> => {
     return this.sequence((tx) => tx.addReferenceInput(utxo.core));
-  }
+  };
 
   /**
    *
@@ -69,12 +67,12 @@ export class Tx<P extends Provider, W extends Wallet> {
    */
   public addUnspentOutputs = (utxos: TraceUtxo[]): Tx<P, W> => {
     return this.sequence((tx) => {
-      for (const {core, trace } of utxos) {
+      for (const { core, trace } of utxos) {
         this.available.insertNew(core, trace.via(`addUnspentOutputs`));
       }
       return tx.addUnspentOutputs(utxos.map((utxo) => utxo.core));
     });
-  }
+  };
 
   /**
    *
@@ -86,11 +84,10 @@ export class Tx<P extends Provider, W extends Wallet> {
   public payAssets = (
     address: Core.Address,
     value: Core.Value,
-    datum?: Core.Datum
+    datum?: Core.Datum,
   ): Tx<P, W> => {
     return this.sequence((tx) => tx.payAssets(address, value, datum));
-  }
-
+  };
 
   /**
    *
@@ -104,10 +101,12 @@ export class Tx<P extends Provider, W extends Wallet> {
     address: Core.Address,
     value: Core.Value,
     datum: Core.Datum,
-    scriptReference?: Core.Script
+    scriptReference?: Core.Script,
   ): Tx<P, W> => {
-    return this.sequence((tx) => tx.lockAssets(address, value, datum, scriptReference));
-  }
+    return this.sequence((tx) =>
+      tx.lockAssets(address, value, datum, scriptReference),
+    );
+  };
 
   /**
    *
@@ -119,10 +118,10 @@ export class Tx<P extends Provider, W extends Wallet> {
   public addMint = (
     policy: Core.PolicyId,
     assets: Map<Core.AssetName, bigint>,
-    redeemer?: Core.PlutusData
+    redeemer?: Core.PlutusData,
   ): Tx<P, W> => {
     return this.sequence((tx) => tx.addMint(policy, assets, redeemer));
-  }
+  };
 
   /**
    *
@@ -131,7 +130,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    */
   public setValidFrom = (validFrom: Core.Slot): Tx<P, W> => {
     return this.sequence((tx) => tx.setValidFrom(validFrom));
-  }
+  };
 
   /**
    *
@@ -140,7 +139,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    */
   public setValidUntil = (validUntil: Core.Slot): Tx<P, W> => {
     return this.sequence((tx) => tx.setValidUntil(validUntil));
-  }
+  };
 
   /**
    *
@@ -149,7 +148,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    */
   public addRequiredSigner = (signer: Core.Ed25519KeyHashHex): Tx<P, W> => {
     return this.sequence((tx) => tx.addRequiredSigner(signer));
-  }
+  };
 
   /**
    *
@@ -158,7 +157,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    */
   public provideScript = (script: Core.Script): Tx<P, W> => {
     return this.sequence((tx) => tx.provideScript(script));
-  }
+  };
 
   // etc.
 
@@ -173,7 +172,11 @@ export class Tx<P extends Provider, W extends Wallet> {
       this.changeAddress === `ownerWallet`
         ? await this.blaze.wallet.getChangeAddress()
         : this.changeAddress;
-    let txBuilder = newTransaction(this.blaze, changeAddress, this.available.list.map((utxo) => utxo.core));
+    let txBuilder = newTransaction(
+      this.blaze,
+      changeAddress,
+      this.available.list.map((utxo) => utxo.core),
+    );
     for (const annoint of this.ointments) {
       txBuilder = annoint(txBuilder);
     }
@@ -181,7 +184,7 @@ export class Tx<P extends Provider, W extends Wallet> {
       this.blaze,
       changeAddress,
       this.available,
-      await txBuilder.complete()
+      await txBuilder.complete(),
     );
   };
 
@@ -194,5 +197,5 @@ export class Tx<P extends Provider, W extends Wallet> {
     const tx = new Tx(this.blaze, this.changeAddress, this.available.clone());
     tx.ointments.push(...this.ointments);
     return tx;
-  }
+  };
 }

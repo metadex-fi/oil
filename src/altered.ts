@@ -10,7 +10,7 @@ import { Blaze, Provider, Wallet, Core, TxBuilder } from "@blaze-cardano/sdk";
 export function newTransaction<P extends Provider, W extends Wallet>(
   blaze: Blaze<P, W>,
   changeAddress: Core.Address,
-  myUtxos: Core.TransactionUnspentOutput[]
+  myUtxos: Core.TransactionUnspentOutput[],
 ): TxBuilder {
   return new TxBuilder(blaze.params).addPreCompleteHook(async (tx) => {
     // const myUtxos = await blaze.wallet.getUnspentOutputs();

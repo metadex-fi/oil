@@ -1,25 +1,25 @@
-import jsdoc from 'eslint-plugin-jsdoc';
-import typescriptPlugin from '@typescript-eslint/eslint-plugin';
-import typescriptParser from '@typescript-eslint/parser';
+import jsdoc from "eslint-plugin-jsdoc";
+import typescriptPlugin from "@typescript-eslint/eslint-plugin";
+import typescriptParser from "@typescript-eslint/parser";
 
 export default [
   {
-    files: ['**/*.ts', '**/*.tsx'],  // Specify TypeScript files
+    files: ["**/*.ts", "**/*.tsx"], // Specify TypeScript files
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
-        project: './tsconfig.json',  // If you have a tsconfig.json, specify its path
-        sourceType: 'module',
+        project: "./tsconfig.json", // If you have a tsconfig.json, specify its path
+        sourceType: "module",
         ecmaVersion: 2020,
       },
     },
     plugins: {
-      '@typescript-eslint': typescriptPlugin,
+      "@typescript-eslint": typescriptPlugin,
       jsdoc,
     },
     rules: {
-      'jsdoc/require-jsdoc': [
-        'error',
+      "jsdoc/require-jsdoc": [
+        "error",
         {
           require: {
             FunctionDeclaration: true,
@@ -30,12 +30,12 @@ export default [
           },
         },
       ],
-      'jsdoc/check-alignment': 'error',
-      'jsdoc/check-indentation': 'error',
-      'jsdoc/require-param': 'error',
-      'jsdoc/require-returns': 'error',
-      'jsdoc/require-returns-type': 'error',  // Ensure @returns has a type
-      'jsdoc/check-tag-names': 'error',
+      "jsdoc/check-alignment": "error",
+      "jsdoc/check-indentation": "error",
+      "jsdoc/require-param": "error",
+      "jsdoc/require-returns": "error",
+      "jsdoc/require-returns-type": "error", // Ensure @returns has a type
+      "jsdoc/check-tag-names": "error",
     },
   },
 ];

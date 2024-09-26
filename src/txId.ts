@@ -20,7 +20,7 @@ export class TxId {
   static fromTransactionId = (txId: Core.TransactionId): TxId => {
     return new TxId(txId);
   };
-  
+
   /**
    *
    * @param tx
