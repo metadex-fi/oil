@@ -19,14 +19,26 @@
   },
   "homepage": "https://github.com/metadex-fi/oil#readme",
   "dependencies": {
-    "@blaze-cardano/sdk": "^0.1.35"
+    "@blaze-cardano/sdk": "^0.2.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.7.0",
     "@typescript-eslint/parser": "^8.7.0",
     "eslint": "^9.11.1",
-    "eslint-plugin-jsdoc": "^50.2.4",
+    "eslint-plugin-jsdoc": "^50.3.0",
     "prettier": "^3.3.3",
     "typescript": "^5.6.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@blaze-cardano/blueprint": "link:../blaze-cardano/packages/blaze-blueprint",
+      "@blaze-cardano/core": "link:../blaze-cardano/packages/blaze-core",
+      "@blaze-cardano/emulator": "link:../blaze-cardano/packages/blaze-emulator",
+      "@blaze-cardano/ogmios": "link:../blaze-cardano/packages/blaze-ogmios",
+      "@blaze-cardano/query": "link:../blaze-cardano/packages/blaze-query",
+      "@blaze-cardano/sdk": "link:../blaze-cardano/packages/blaze-sdk",
+      "@blaze-cardano/tx": "link:../blaze-cardano/packages/blaze-tx",
+      "@blaze-cardano/uplc": "link:../blaze-cardano/packages/blaze-uplc"
+    }
   }
 }
