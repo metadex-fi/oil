@@ -5,6 +5,7 @@
   "description": "The oil carries our message, our purpose, our vision. It infects, it alters, it completes.",
   "main": "index.js",
   "scripts": {
+    "build": "tsup src/**/*.ts --format esm,cjs --dts --external rxjs",
     "fmt": "prettier --write . && eslint --fix src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,26 +20,30 @@
   },
   "homepage": "https://github.com/metadex-fi/oil#readme",
   "dependencies": {
-    "@blaze-cardano/sdk": "^0.2.2"
+    "@blaze-cardano/sdk": "link:../../blaze-cardano/packages/blaze-sdk"
   },
   "devDependencies": {
+    "@blaze-cardano/tsconfig": "^0.0.2",
     "@typescript-eslint/eslint-plugin": "^8.7.0",
     "@typescript-eslint/parser": "^8.7.0",
     "eslint": "^9.11.1",
     "eslint-plugin-jsdoc": "^50.3.0",
     "prettier": "^3.3.3",
+    "tsup": "^8.3.0",
     "typescript": "^5.6.2"
   },
   "pnpm": {
     "overrides": {
-      "@blaze-cardano/blueprint": "link:../blaze-cardano/packages/blaze-blueprint",
-      "@blaze-cardano/core": "link:../blaze-cardano/packages/blaze-core",
-      "@blaze-cardano/emulator": "link:../blaze-cardano/packages/blaze-emulator",
-      "@blaze-cardano/ogmios": "link:../blaze-cardano/packages/blaze-ogmios",
-      "@blaze-cardano/query": "link:../blaze-cardano/packages/blaze-query",
-      "@blaze-cardano/sdk": "link:../blaze-cardano/packages/blaze-sdk",
-      "@blaze-cardano/tx": "link:../blaze-cardano/packages/blaze-tx",
-      "@blaze-cardano/uplc": "link:../blaze-cardano/packages/blaze-uplc"
+      "@blaze-cardano/blueprint": "link:../../blaze-cardano/packages/blaze-blueprint",
+      "@blaze-cardano/core": "link:../../blaze-cardano/packages/blaze-core",
+      "@blaze-cardano/emulator": "link:../../blaze-cardano/packages/blaze-emulator",
+      "@blaze-cardano/ogmios": "link:../../blaze-cardano/packages/blaze-ogmios",
+      "@blaze-cardano/query": "link:../../blaze-cardano/packages/blaze-query",
+      "@blaze-cardano/sdk": "link:../../blaze-cardano/packages/blaze-sdk",
+      "@blaze-cardano/tx": "link:../../blaze-cardano/packages/blaze-tx",
+      "@blaze-cardano/uplc": "link:../../blaze-cardano/packages/blaze-uplc",
+      "@blaze-cardano/tsconfig": "link:../../blaze-cardano/packages/blaze-tsconfig"
     }
-  }
+  },
+  "packageManager": "pnpm@9.9.0+sha512.60c18acd138bff695d339be6ad13f7e936eea6745660d4cc4a776d5247c540d0edee1a563695c183a66eb917ef88f2b4feb1fc25f32a7adcadc7aaf3438e99c1"
 }

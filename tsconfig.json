@@ -1,18 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "strict": true,
-    "esModuleInterop": true,
-    // "skipLibCheck": true,
-    "skipLibCheck": false, // Ensures type checking is performed on all files
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-    "declaration": true,
-    "sourceMap": true,
-    "moduleResolution": "Node",
-    "allowSyntheticDefaultImports": true
-  },
-  "include": ["src", "__tests__"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "extends": "@blaze-cardano/tsconfig/base.json",
+  "exclude": ["dist", ".turbo", "node_modules"]
 }

@@ -1,6 +1,6 @@
 import { TxBuilder, Blaze, Provider, Wallet, Core } from "@blaze-cardano/sdk";
 import { newTransaction } from "./altered";
-import { CoreUtxo, TraceUtxo } from "./types";
+import { TraceUtxo } from "./types";
 import assert from "assert";
 import { UtxoSet } from "./utxoSet";
 import { TxCompleat } from "./txCompleat";
