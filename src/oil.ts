@@ -4,3 +4,4 @@ export * from "./txCompleat";
 export * from "./txId";
 export * from "./txSigned";
 export * from "./utxoSet";
+export * from "./types";
