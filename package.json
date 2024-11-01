@@ -5,7 +5,7 @@
   "description": "The oil carries our message, our purpose, our vision. It infects, it alters, it completes.",
   "main": "index.js",
   "scripts": {
-    "build": "tsup src/**/*.ts --format esm,cjs --dts --external rxjs",
+    "build": "tsc",
     "fmt": "prettier --write . && eslint --fix src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
