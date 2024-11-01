@@ -4,17 +4,17 @@
   "description": "The oil carries our message, our purpose, our vision. It infects, it alters, it completes.",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/🕯️.mjs",
+      "require": "./dist/🕯️.js"
     }
   },
-  "types": "./dist/index.d.ts",
+  "types": "./dist/🕯️.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --watch --dts",
+    "build": "tsup src/🕯️.ts --format esm,cjs --dts",
+    "dev": "tsup src/🕯️.ts --format esm,cjs --watch --dts",
     "lint": "eslint \"src/**/*.ts*\"",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
