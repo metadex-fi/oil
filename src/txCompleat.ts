@@ -92,6 +92,7 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
    * spent utxos removed and the change-utxos at the wallet's change-address added.
    * The other outputs of that previous tx are considered unavailable, unless added
    * explicitly again via the addUtxos parameter.
+   * @param nextBlaze optional different base wallet for the next tx
    * @param utxoChainers optional functions to add non-change-outputs from the previous tx
    * to the set of available utxos. The redeemer-field determines whether it has to be
    * spent in the chained tx, or is simply made available. There does not appear to be
@@ -99,7 +100,6 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
    * then I'm not even sure if I'm merely guessing wrong about the difference between
    * addInput (assuming that means mandatory inclusion) and addUnspentOutputs (assuming
    * that means optional inclusion).
-   * @param nextBlaze optional different base wallet for the next tx
    * @returns {Tx}
    */
   public chain = async (
