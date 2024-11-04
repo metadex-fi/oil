@@ -99,18 +99,19 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
    * then I'm not even sure if I'm merely guessing wrong about the difference between
    * addInput (assuming that means mandatory inclusion) and addUnspentOutputs (assuming
    * that means optional inclusion).
-   * @param changeAddress optional different "change" address for the chained tx
+   * @param nextBlaze optional different base wallet for the next tx
    * @returns {Tx}
    */
-  public chain = (
+  public chain = async (
+    nextBlaze: Blaze<P, W> | `same`,
     utxoChainers: ((utxos: UtxoSet) => {
       utxo: TraceUtxo;
       redeemer: Core.PlutusData | `coerce` | `supply`;
     }[])[] = [],
-    changeAddress?: Core.Address,
-  ): Tx<P, W> => {
-    const { residual, posterior } = changeAddress ? this.changeAt(changeAddress) : this.inputs;
-    let tx = new Tx(this.blaze, this.changeAddress, residual);
+  ): Promise<Tx<P, W>> => {
+    const blaze = nextBlaze === `same` ? this.blaze : nextBlaze;
+    const { residual, posterior } = nextBlaze === `same` ? this.inputs : this.changeAt(await nextBlaze.wallet.getChangeAddress());
+    let tx = new Tx(blaze, residual);
 
     for (const chainUtxos of utxoChainers) {
       for (const { utxo, redeemer } of chainUtxos(posterior)) {

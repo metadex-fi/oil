@@ -15,13 +15,11 @@ export class Tx<P extends Provider, W extends Wallet> {
   /**
    *
    * @param blaze
-   * @param changeAddress
    * @param available
    * @returns {Tx}
    */
   constructor(
     private readonly blaze: Blaze<P, W>,
-    private readonly changeAddress: Core.Address | `ownerWallet`,
     private readonly available: UtxoSet,
   ) {}
 
@@ -168,10 +166,7 @@ export class Tx<P extends Provider, W extends Wallet> {
   public compleat = async (): Promise<TxCompleat<P, W>> => {
     assert(!this.isCompleat, `Tx.compleat: already compleat`);
     this.isCompleat = true;
-    const changeAddress =
-      this.changeAddress === `ownerWallet`
-        ? await this.blaze.wallet.getChangeAddress()
-        : this.changeAddress;
+    const changeAddress = await this.blaze.wallet.getChangeAddress();
     let txBuilder = newTransaction(
       this.blaze,
       changeAddress,
@@ -194,7 +189,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    */
   public clone = (): Tx<P, W> => {
     assert(!this.isCompleat, `Tx.clone: already compleat`);
-    const tx = new Tx(this.blaze, this.changeAddress, this.available.clone());
+    const tx = new Tx(this.blaze, this.available.clone());
     tx.ointments.push(...this.ointments);
     return tx;
   };
