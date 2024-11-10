@@ -110,7 +110,10 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
     }[])[] = [],
   ): Promise<Tx<P, W>> => {
     const blaze = nextBlaze === `same` ? this.blaze : nextBlaze;
-    const { residual, posterior } = nextBlaze === `same` ? this.inputs : this.changeAt(await nextBlaze.wallet.getChangeAddress());
+    const { residual, posterior } =
+      nextBlaze === `same`
+        ? this.inputs
+        : this.changeAt(await nextBlaze.wallet.getChangeAddress());
     let tx = new Tx(blaze, residual);
 
     for (const chainUtxos of utxoChainers) {
@@ -130,7 +133,7 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
         }
       }
     }
-    
+
     return tx;
   };
 
