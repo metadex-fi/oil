@@ -106,7 +106,7 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
     nextBlaze: Blaze<P, W> | `same`,
     utxoChainers: ((utxos: UtxoSet) => {
       utxo: TraceUtxo;
-      redeemer: Core.PlutusData | `coerce` | `supply`;
+      redeemer: Core.PlutusData | `coerce` | `supply` | `read`;
     }[])[] = [],
   ): Promise<Tx<P, W>> => {
     const blaze = nextBlaze === `same` ? this.blaze : nextBlaze;
@@ -121,6 +121,9 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
             break;
           case `coerce`:
             tx = tx.addInput(utxo);
+            break;
+          case `read`:
+            tx = tx.addReferenceInput(utxo);
             break;
           default:
             tx = tx.addInput(utxo, redeemer);
