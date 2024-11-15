@@ -124,9 +124,45 @@ export class Tx<P extends Provider, W extends Wallet> {
   /**
    *
    * @param validFrom
+   * @param slotDurationMs
    * @returns {Tx}
    */
-  public setValidFrom = (validFrom: Core.Slot): Tx<P, W> => {
+  public setValidFromMs = (
+    validFrom: bigint,
+    slotDurationMs: bigint,
+    round: `up` | `down`,
+  ): Tx<P, W> => {
+    const slot =
+      round === `down`
+        ? Number(validFrom / slotDurationMs)
+        : Math.ceil(Number(validFrom) / Number(slotDurationMs));
+    return this.setValidFromSlot(slot as Core.Slot);
+  };
+
+  /**
+   *
+   * @param validUntil
+   * @param slotDurationMs
+   * @returns {Tx}
+   */
+  public setValidUntilMs = (
+    validUntil: bigint,
+    slotDurationMs: bigint,
+    round: `up` | `down`,
+  ): Tx<P, W> => {
+    const slot =
+      round === `down`
+        ? Number(validUntil / slotDurationMs)
+        : Math.ceil(Number(validUntil) / Number(slotDurationMs));
+    return this.setValidUntilSlot(slot as Core.Slot);
+  };
+
+  /**
+   *
+   * @param validFrom
+   * @returns {Tx}
+   */
+  public setValidFromSlot = (validFrom: Core.Slot): Tx<P, W> => {
     return this.sequence((tx) => tx.setValidFrom(validFrom));
   };
 
@@ -135,7 +171,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @param validUntil
    * @returns {Tx}
    */
-  public setValidUntil = (validUntil: Core.Slot): Tx<P, W> => {
+  public setValidUntilSlot = (validUntil: Core.Slot): Tx<P, W> => {
     return this.sequence((tx) => tx.setValidUntil(validUntil));
   };
 
