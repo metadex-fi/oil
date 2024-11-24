@@ -231,4 +231,23 @@ export class UtxoSet {
     }
     return new UtxoSet(set, list);
   };
+
+  public equals = (other: UtxoSet): boolean => {
+    if (this.size !== other.size) {
+      return false;
+    }
+    for (const [txId, outputs] of this.set) {
+      const outputs_ = other.set.get(txId);
+      if (!outputs_) return false;
+
+      for (const [index, utxo] of outputs) {
+        const utxo_ = outputs_.get(index);
+        if (!utxo_) return false;
+        if (utxo.core.output().toCbor() !== utxo_.core.output().toCbor()) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
 }

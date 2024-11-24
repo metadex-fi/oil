@@ -43,12 +43,12 @@ export class Trace {
 
   /**
    *
-   * @param name
+   * @param name___
    * @param from
    * @returns {Trace}
    */
-  public calledFrom = (name: string, from: string): Trace => {
-    const trace = `${name}${calledFrom}${from}${this.compose()}`;
+  public calledFrom = (name___: string, from: string): Trace => {
+    const trace = `${name___}${calledFrom}${from}${this.compose()}`;
     return new Trace(trace, calledFrom);
   };
 

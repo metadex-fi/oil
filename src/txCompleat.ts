@@ -141,8 +141,8 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
    *
    * @returns {Promise<TxSigned<P, W>>}
    */
-  public sign = async (): Promise<TxSigned<P, W>> => {
+  public sign = async (): Promise<TxSigned> => {
     const txSigned = await this.blaze.signTransaction(this.tx);
-    return new TxSigned(this.blaze, txSigned);
+    return new TxSigned(txSigned);
   };
 }
