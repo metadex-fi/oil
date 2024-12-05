@@ -192,6 +192,22 @@ export class UtxoSet {
 
   /**
    *
+   * @param inputs
+   * @returns {UtxoSet}
+   */
+  public ofAddress = (address: Core.Address): UtxoSet => {
+    const utxoSet = UtxoSet.empty();
+    const address_ = address.toBech32();
+    for (const utxo of this.list) {
+      if (utxo.core.output().address().toBech32() === address_) {
+        utxoSet.insertNew(utxo.core, utxo.trace);
+      }
+    }
+    return utxoSet;
+  };
+
+  /**
+   *
    * @returns {TraceUtxo}
    */
   public removeHead = (): TraceUtxo => {
@@ -249,5 +265,14 @@ export class UtxoSet {
       }
     }
     return true;
+  };
+
+  public show = (tabs = ``): string => {
+    return `UtxoSet:\n${this.list
+      .map(
+        (utxo) =>
+          `${tabs} ${utxo.core.input().transactionId()}:${utxo.core.input().index()} at ${utxo.core.output().address().toBech32()}`,
+      )
+      .join("\n")}`;
   };
 }

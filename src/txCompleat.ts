@@ -48,30 +48,28 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
    * @param address
    * @returns {{residual: UtxoSet; posterior: UtxoSet}}
    */
-  private changeAt(address: Core.Address): {
+  public changeAt(address: Core.Address): {
     residual: UtxoSet;
     posterior: UtxoSet;
   } {
     const consumed = this.tx.body().inputs().values();
-    const produced = this.tx.body().outputs().values();
+    const produced = this.tx.body().outputs();
 
-    const { posterior: residual } = this.residual.except(consumed);
+    const residual = this.residual.except(consumed).posterior;
     const posterior = UtxoSet.empty();
 
     const txId = this.tx.toCore().id;
-    let idx = 0n;
-
-    let next = produced.next();
     /**
      * checks if the utxo is being created at the change address
      * @param utxo
      * @returns {boolean}
      */
+    const address_ = address.toBech32();
     const change = (utxo: CoreUtxo): boolean =>
-      utxo.output().address() === address;
-    while (!next.done) {
-      const input = new Core.TransactionInput(txId, idx++);
-      const output = next.value;
+      utxo.output().address().toBech32() === address_;
+    for (let idx = 0; idx < produced.length; idx++) {
+      const input = new Core.TransactionInput(txId, BigInt(idx));
+      const output = produced[idx]!;
       const utxo = new Core.TransactionUnspentOutput(input, output);
       if (change(utxo)) {
         residual.insertNew(utxo, Trace.source(`CHAIN`, `TxCompleat.change`));
@@ -81,7 +79,6 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
           Trace.source(`CHAIN`, `TxCompleat.posterior`),
         );
       }
-      next = produced.next();
     }
 
     return { residual, posterior };
