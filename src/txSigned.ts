@@ -3,7 +3,7 @@ import { Core } from "@blaze-cardano/sdk";
 /**
  *
  */
-export class TxSigned {
+export class TxSigned<WT extends `servitor` | `owner`> {
   /**
    *
    * @param blaze

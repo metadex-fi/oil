@@ -8,7 +8,11 @@ import { TxCompleat } from "./txCompleat";
 /**
  *
  */
-export class Tx<P extends Provider, W extends Wallet> {
+export class Tx<
+  P extends Provider,
+  W extends Wallet,
+  WT extends `servitor` | `owner`,
+> {
   private readonly ointments: ((tx: TxBuilder) => TxBuilder)[] = [];
   private isCompleat = false;
 
@@ -28,7 +32,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @param rite
    * @returns {Tx}
    */
-  private sequence = (rite: (tx: TxBuilder) => TxBuilder): Tx<P, W> => {
+  private sequence = (rite: (tx: TxBuilder) => TxBuilder): Tx<P, W, WT> => {
     assert(!this.isCompleat, `Tx.sequence: already compleat`);
     this.ointments.push(rite);
     return this;
@@ -45,7 +49,7 @@ export class Tx<P extends Provider, W extends Wallet> {
     utxo: TraceUtxo,
     redeemer?: Core.PlutusData,
     unhashDatum?: Core.PlutusData,
-  ): Tx<P, W> => {
+  ): Tx<P, W, WT> => {
     return this.sequence((tx) => tx.addInput(utxo.core, redeemer, unhashDatum));
   };
 
@@ -54,7 +58,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @param utxo
    * @returns {Tx}
    */
-  public addReferenceInput = (utxo: TraceUtxo): Tx<P, W> => {
+  public addReferenceInput = (utxo: TraceUtxo): Tx<P, W, WT> => {
     return this.sequence((tx) => tx.addReferenceInput(utxo.core));
   };
 
@@ -63,7 +67,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @param utxos
    * @returns {Tx}
    */
-  public addUnspentOutputs = (utxos: TraceUtxo[]): Tx<P, W> => {
+  public addUnspentOutputs = (utxos: TraceUtxo[]): Tx<P, W, WT> => {
     return this.sequence((tx) => {
       for (const { core, trace } of utxos) {
         this.available.insertNew(core, trace.via(`addUnspentOutputs`));
@@ -83,7 +87,7 @@ export class Tx<P extends Provider, W extends Wallet> {
     address: Core.Address,
     value: Core.Value,
     datum?: Core.Datum,
-  ): Tx<P, W> => {
+  ): Tx<P, W, WT> => {
     return this.sequence((tx) => tx.payAssets(address, value, datum));
   };
 
@@ -100,7 +104,7 @@ export class Tx<P extends Provider, W extends Wallet> {
     value: Core.Value,
     datum: Core.Datum,
     scriptReference?: Core.Script,
-  ): Tx<P, W> => {
+  ): Tx<P, W, WT> => {
     return this.sequence((tx) =>
       tx.lockAssets(address, value, datum, scriptReference),
     );
@@ -117,7 +121,7 @@ export class Tx<P extends Provider, W extends Wallet> {
     policy: Core.PolicyId,
     assets: Map<Core.AssetName, bigint>,
     redeemer?: Core.PlutusData,
-  ): Tx<P, W> => {
+  ): Tx<P, W, WT> => {
     return this.sequence((tx) => tx.addMint(policy, assets, redeemer));
   };
 
@@ -131,7 +135,7 @@ export class Tx<P extends Provider, W extends Wallet> {
     validFrom: bigint,
     slotDurationMs: bigint,
     round: `up` | `down`,
-  ): Tx<P, W> => {
+  ): Tx<P, W, WT> => {
     const slot =
       round === `down`
         ? Number(validFrom / slotDurationMs)
@@ -149,7 +153,7 @@ export class Tx<P extends Provider, W extends Wallet> {
     validUntil: bigint,
     slotDurationMs: bigint,
     round: `up` | `down`,
-  ): Tx<P, W> => {
+  ): Tx<P, W, WT> => {
     const slot =
       round === `down`
         ? Number(validUntil / slotDurationMs)
@@ -162,7 +166,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @param validFrom
    * @returns {Tx}
    */
-  public setValidFromSlot = (validFrom: Core.Slot): Tx<P, W> => {
+  public setValidFromSlot = (validFrom: Core.Slot): Tx<P, W, WT> => {
     return this.sequence((tx) => tx.setValidFrom(validFrom));
   };
 
@@ -171,7 +175,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @param validUntil
    * @returns {Tx}
    */
-  public setValidUntilSlot = (validUntil: Core.Slot): Tx<P, W> => {
+  public setValidUntilSlot = (validUntil: Core.Slot): Tx<P, W, WT> => {
     return this.sequence((tx) => tx.setValidUntil(validUntil));
   };
 
@@ -180,7 +184,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @param signer
    * @returns {Tx}
    */
-  public addRequiredSigner = (signer: Core.Ed25519KeyHashHex): Tx<P, W> => {
+  public addRequiredSigner = (signer: Core.Ed25519KeyHashHex): Tx<P, W, WT> => {
     return this.sequence((tx) => tx.addRequiredSigner(signer));
   };
 
@@ -189,7 +193,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    * @param script
    * @returns {Tx}
    */
-  public provideScript = (script: Core.Script): Tx<P, W> => {
+  public provideScript = (script: Core.Script): Tx<P, W, WT> => {
     return this.sequence((tx) => tx.provideScript(script));
   };
 
@@ -199,7 +203,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    *
    * @returns {Promise<TxCompleat>}
    */
-  public compleat = async (): Promise<TxCompleat<P, W>> => {
+  public compleat = async (): Promise<TxCompleat<P, W, WT>> => {
     assert(!this.isCompleat, `Tx.compleat: already compleat`);
     this.isCompleat = true;
     const changeAddress = await this.blaze.wallet.getChangeAddress();
@@ -223,7 +227,7 @@ export class Tx<P extends Provider, W extends Wallet> {
    *
    * @returns {Tx}
    */
-  public clone = (): Tx<P, W> => {
+  public clone = (): Tx<P, W, WT> => {
     assert(!this.isCompleat, `Tx.clone: already compleat`);
     const tx = new Tx(this.blaze, this.available.clone());
     tx.ointments.push(...this.ointments);

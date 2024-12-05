@@ -8,7 +8,11 @@ import { Trace } from "./trace";
 /**
  *
  */
-export class TxCompleat<P extends Provider, W extends Wallet> {
+export class TxCompleat<
+  P extends Provider,
+  W extends Wallet,
+  WT extends `servitor` | `owner`,
+> {
   private inputsCache:
     | {
         residual: UtxoSet;
@@ -105,7 +109,7 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
       utxo: TraceUtxo;
       redeemer: Core.PlutusData | `coerce` | `supply` | `read`;
     }[])[] = [],
-  ): Promise<Tx<P, W>> => {
+  ): Promise<Tx<P, W, WT>> => {
     const blaze = nextBlaze === `same` ? this.blaze : nextBlaze;
     const { residual, posterior } =
       nextBlaze === `same`
@@ -138,7 +142,7 @@ export class TxCompleat<P extends Provider, W extends Wallet> {
    *
    * @returns {Promise<TxSigned<P, W>>}
    */
-  public sign = async (): Promise<TxSigned> => {
+  public sign = async (): Promise<TxSigned<WT>> => {
     const txSigned = await this.blaze.signTransaction(this.tx);
     return new TxSigned(txSigned);
   };
